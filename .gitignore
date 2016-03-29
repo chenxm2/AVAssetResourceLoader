@@ -60,4 +60,5 @@ fastlane/screenshots
 /build
 /captures
 /TTResourceLoader/Pods
+/TTResourceLoader/*.xcworkspace
 */build
