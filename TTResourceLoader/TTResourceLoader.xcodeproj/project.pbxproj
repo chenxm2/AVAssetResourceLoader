@@ -1,0 +1,633 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		475701C01CAA5A6400AD588F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 475701BF1CAA5A6400AD588F /* main.m */; };
+		475701C31CAA5A6400AD588F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 475701C21CAA5A6400AD588F /* AppDelegate.m */; };
+		475701C61CAA5A6400AD588F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 475701C51CAA5A6400AD588F /* ViewController.m */; };
+		475701C91CAA5A6400AD588F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 475701C71CAA5A6400AD588F /* Main.storyboard */; };
+		475701CB1CAA5A6400AD588F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 475701CA1CAA5A6400AD588F /* Assets.xcassets */; };
+		475701CE1CAA5A6400AD588F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 475701CC1CAA5A6400AD588F /* LaunchScreen.storyboard */; };
+		475701D91CAA5A6400AD588F /* TTResourceLoaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 475701D81CAA5A6400AD588F /* TTResourceLoaderTests.m */; };
+		475701E41CAA5A6400AD588F /* TTResourceLoaderUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 475701E31CAA5A6400AD588F /* TTResourceLoaderUITests.m */; };
+		475701F91CAA5B3500AD588F /* TTDownloadSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 475701F51CAA5B3500AD588F /* TTDownloadSegment.m */; };
+		475701FA1CAA5B3500AD588F /* TTDownloadTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 475701F71CAA5B3500AD588F /* TTDownloadTask.m */; };
+		475701FE1CAA5E4400AD588F /* TTAVAssetResourceLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 475701FD1CAA5E4400AD588F /* TTAVAssetResourceLoader.m */; };
+		475702061CAA77F200AD588F /* TTMoviePlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 475702051CAA77F100AD588F /* TTMoviePlayerView.m */; };
+		7B75A097BB457DC69AC7FE48 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2B3BF307E7041B809B605E /* libPods.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		475701D51CAA5A6400AD588F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 475701B31CAA5A6400AD588F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 475701BA1CAA5A6400AD588F;
+			remoteInfo = TTResourceLoader;
+		};
+		475701E01CAA5A6400AD588F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 475701B31CAA5A6400AD588F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 475701BA1CAA5A6400AD588F;
+			remoteInfo = TTResourceLoader;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		475701BB1CAA5A6400AD588F /* TTResourceLoader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TTResourceLoader.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		475701BF1CAA5A6400AD588F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		475701C11CAA5A6400AD588F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		475701C21CAA5A6400AD588F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		475701C41CAA5A6400AD588F /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		475701C51CAA5A6400AD588F /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		475701C81CAA5A6400AD588F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		475701CA1CAA5A6400AD588F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		475701CD1CAA5A6400AD588F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		475701CF1CAA5A6400AD588F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		475701D41CAA5A6400AD588F /* TTResourceLoaderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TTResourceLoaderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		475701D81CAA5A6400AD588F /* TTResourceLoaderTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTResourceLoaderTests.m; sourceTree = "<group>"; };
+		475701DA1CAA5A6400AD588F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		475701DF1CAA5A6400AD588F /* TTResourceLoaderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TTResourceLoaderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		475701E31CAA5A6400AD588F /* TTResourceLoaderUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTResourceLoaderUITests.m; sourceTree = "<group>"; };
+		475701E51CAA5A6400AD588F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		475701F41CAA5B3500AD588F /* TTDownloadSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTDownloadSegment.h; sourceTree = "<group>"; };
+		475701F51CAA5B3500AD588F /* TTDownloadSegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTDownloadSegment.m; sourceTree = "<group>"; };
+		475701F61CAA5B3500AD588F /* TTDownloadTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTDownloadTask.h; sourceTree = "<group>"; };
+		475701F71CAA5B3500AD588F /* TTDownloadTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTDownloadTask.m; sourceTree = "<group>"; };
+		475701FC1CAA5E4400AD588F /* TTAVAssetResourceLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTAVAssetResourceLoader.h; sourceTree = "<group>"; };
+		475701FD1CAA5E4400AD588F /* TTAVAssetResourceLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTAVAssetResourceLoader.m; sourceTree = "<group>"; };
+		475702041CAA77F100AD588F /* TTMoviePlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTMoviePlayerView.h; sourceTree = "<group>"; };
+		475702051CAA77F100AD588F /* TTMoviePlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTMoviePlayerView.m; sourceTree = "<group>"; };
+		BA681C8540B86EA79A2494D7 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		D203B01EA4696167AD31CEC8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		DF2B3BF307E7041B809B605E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		475701B81CAA5A6400AD588F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B75A097BB457DC69AC7FE48 /* libPods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		475701D11CAA5A6400AD588F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		475701DC1CAA5A6400AD588F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		02D1E408063D7D1D90EBA921 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				BA681C8540B86EA79A2494D7 /* Pods.debug.xcconfig */,
+				D203B01EA4696167AD31CEC8 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		18DA4F57ED8635C53265232F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DF2B3BF307E7041B809B605E /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		475701B21CAA5A6400AD588F = {
+			isa = PBXGroup;
+			children = (
+				475701BD1CAA5A6400AD588F /* TTResourceLoader */,
+				475701D71CAA5A6400AD588F /* TTResourceLoaderTests */,
+				475701E21CAA5A6400AD588F /* TTResourceLoaderUITests */,
+				475701BC1CAA5A6400AD588F /* Products */,
+				02D1E408063D7D1D90EBA921 /* Pods */,
+				18DA4F57ED8635C53265232F /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		475701BC1CAA5A6400AD588F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				475701BB1CAA5A6400AD588F /* TTResourceLoader.app */,
+				475701D41CAA5A6400AD588F /* TTResourceLoaderTests.xctest */,
+				475701DF1CAA5A6400AD588F /* TTResourceLoaderUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		475701BD1CAA5A6400AD588F /* TTResourceLoader */ = {
+			isa = PBXGroup;
+			children = (
+				475702031CAA77C900AD588F /* TTMoviePlayer */,
+				475701FB1CAA5E1900AD588F /* TTAVAssetResourceLoader */,
+				475701F11CAA5B3500AD588F /* TTDownload */,
+				475701C11CAA5A6400AD588F /* AppDelegate.h */,
+				475701C21CAA5A6400AD588F /* AppDelegate.m */,
+				475701C41CAA5A6400AD588F /* ViewController.h */,
+				475701C51CAA5A6400AD588F /* ViewController.m */,
+				475701C71CAA5A6400AD588F /* Main.storyboard */,
+				475701CA1CAA5A6400AD588F /* Assets.xcassets */,
+				475701CC1CAA5A6400AD588F /* LaunchScreen.storyboard */,
+				475701CF1CAA5A6400AD588F /* Info.plist */,
+				475701BE1CAA5A6400AD588F /* Supporting Files */,
+			);
+			path = TTResourceLoader;
+			sourceTree = "<group>";
+		};
+		475701BE1CAA5A6400AD588F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				475701BF1CAA5A6400AD588F /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		475701D71CAA5A6400AD588F /* TTResourceLoaderTests */ = {
+			isa = PBXGroup;
+			children = (
+				475701D81CAA5A6400AD588F /* TTResourceLoaderTests.m */,
+				475701DA1CAA5A6400AD588F /* Info.plist */,
+			);
+			path = TTResourceLoaderTests;
+			sourceTree = "<group>";
+		};
+		475701E21CAA5A6400AD588F /* TTResourceLoaderUITests */ = {
+			isa = PBXGroup;
+			children = (
+				475701E31CAA5A6400AD588F /* TTResourceLoaderUITests.m */,
+				475701E51CAA5A6400AD588F /* Info.plist */,
+			);
+			path = TTResourceLoaderUITests;
+			sourceTree = "<group>";
+		};
+		475701F11CAA5B3500AD588F /* TTDownload */ = {
+			isa = PBXGroup;
+			children = (
+				475701F41CAA5B3500AD588F /* TTDownloadSegment.h */,
+				475701F51CAA5B3500AD588F /* TTDownloadSegment.m */,
+				475701F61CAA5B3500AD588F /* TTDownloadTask.h */,
+				475701F71CAA5B3500AD588F /* TTDownloadTask.m */,
+			);
+			path = TTDownload;
+			sourceTree = "<group>";
+		};
+		475701FB1CAA5E1900AD588F /* TTAVAssetResourceLoader */ = {
+			isa = PBXGroup;
+			children = (
+				475701FC1CAA5E4400AD588F /* TTAVAssetResourceLoader.h */,
+				475701FD1CAA5E4400AD588F /* TTAVAssetResourceLoader.m */,
+			);
+			path = TTAVAssetResourceLoader;
+			sourceTree = "<group>";
+		};
+		475702031CAA77C900AD588F /* TTMoviePlayer */ = {
+			isa = PBXGroup;
+			children = (
+				475702041CAA77F100AD588F /* TTMoviePlayerView.h */,
+				475702051CAA77F100AD588F /* TTMoviePlayerView.m */,
+			);
+			path = TTMoviePlayer;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		475701BA1CAA5A6400AD588F /* TTResourceLoader */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 475701E81CAA5A6400AD588F /* Build configuration list for PBXNativeTarget "TTResourceLoader" */;
+			buildPhases = (
+				D18B82D216AFEA43C06EDEA5 /* Check Pods Manifest.lock */,
+				475701B71CAA5A6400AD588F /* Sources */,
+				475701B81CAA5A6400AD588F /* Frameworks */,
+				475701B91CAA5A6400AD588F /* Resources */,
+				4F44043B02662D1D253AE38F /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TTResourceLoader;
+			productName = TTResourceLoader;
+			productReference = 475701BB1CAA5A6400AD588F /* TTResourceLoader.app */;
+			productType = "com.apple.product-type.application";
+		};
+		475701D31CAA5A6400AD588F /* TTResourceLoaderTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 475701EB1CAA5A6400AD588F /* Build configuration list for PBXNativeTarget "TTResourceLoaderTests" */;
+			buildPhases = (
+				475701D01CAA5A6400AD588F /* Sources */,
+				475701D11CAA5A6400AD588F /* Frameworks */,
+				475701D21CAA5A6400AD588F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				475701D61CAA5A6400AD588F /* PBXTargetDependency */,
+			);
+			name = TTResourceLoaderTests;
+			productName = TTResourceLoaderTests;
+			productReference = 475701D41CAA5A6400AD588F /* TTResourceLoaderTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		475701DE1CAA5A6400AD588F /* TTResourceLoaderUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 475701EE1CAA5A6400AD588F /* Build configuration list for PBXNativeTarget "TTResourceLoaderUITests" */;
+			buildPhases = (
+				475701DB1CAA5A6400AD588F /* Sources */,
+				475701DC1CAA5A6400AD588F /* Frameworks */,
+				475701DD1CAA5A6400AD588F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				475701E11CAA5A6400AD588F /* PBXTargetDependency */,
+			);
+			name = TTResourceLoaderUITests;
+			productName = TTResourceLoaderUITests;
+			productReference = 475701DF1CAA5A6400AD588F /* TTResourceLoaderUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		475701B31CAA5A6400AD588F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = xianmingchen;
+				TargetAttributes = {
+					475701BA1CAA5A6400AD588F = {
+						CreatedOnToolsVersion = 7.2;
+					};
+					475701D31CAA5A6400AD588F = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 475701BA1CAA5A6400AD588F;
+					};
+					475701DE1CAA5A6400AD588F = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 475701BA1CAA5A6400AD588F;
+					};
+				};
+			};
+			buildConfigurationList = 475701B61CAA5A6400AD588F /* Build configuration list for PBXProject "TTResourceLoader" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 475701B21CAA5A6400AD588F;
+			productRefGroup = 475701BC1CAA5A6400AD588F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				475701BA1CAA5A6400AD588F /* TTResourceLoader */,
+				475701D31CAA5A6400AD588F /* TTResourceLoaderTests */,
+				475701DE1CAA5A6400AD588F /* TTResourceLoaderUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		475701B91CAA5A6400AD588F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				475701CE1CAA5A6400AD588F /* LaunchScreen.storyboard in Resources */,
+				475701CB1CAA5A6400AD588F /* Assets.xcassets in Resources */,
+				475701C91CAA5A6400AD588F /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		475701D21CAA5A6400AD588F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		475701DD1CAA5A6400AD588F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4F44043B02662D1D253AE38F /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D18B82D216AFEA43C06EDEA5 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		475701B71CAA5A6400AD588F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				475701FE1CAA5E4400AD588F /* TTAVAssetResourceLoader.m in Sources */,
+				475701FA1CAA5B3500AD588F /* TTDownloadTask.m in Sources */,
+				475701C61CAA5A6400AD588F /* ViewController.m in Sources */,
+				475701F91CAA5B3500AD588F /* TTDownloadSegment.m in Sources */,
+				475701C31CAA5A6400AD588F /* AppDelegate.m in Sources */,
+				475701C01CAA5A6400AD588F /* main.m in Sources */,
+				475702061CAA77F200AD588F /* TTMoviePlayerView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		475701D01CAA5A6400AD588F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				475701D91CAA5A6400AD588F /* TTResourceLoaderTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		475701DB1CAA5A6400AD588F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				475701E41CAA5A6400AD588F /* TTResourceLoaderUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		475701D61CAA5A6400AD588F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 475701BA1CAA5A6400AD588F /* TTResourceLoader */;
+			targetProxy = 475701D51CAA5A6400AD588F /* PBXContainerItemProxy */;
+		};
+		475701E11CAA5A6400AD588F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 475701BA1CAA5A6400AD588F /* TTResourceLoader */;
+			targetProxy = 475701E01CAA5A6400AD588F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		475701C71CAA5A6400AD588F /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				475701C81CAA5A6400AD588F /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		475701CC1CAA5A6400AD588F /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				475701CD1CAA5A6400AD588F /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		475701E61CAA5A6400AD588F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		475701E71CAA5A6400AD588F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		475701E91CAA5A6400AD588F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BA681C8540B86EA79A2494D7 /* Pods.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = TTResourceLoader/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.TTResourceLoader;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		475701EA1CAA5A6400AD588F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D203B01EA4696167AD31CEC8 /* Pods.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = TTResourceLoader/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.TTResourceLoader;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		475701EC1CAA5A6400AD588F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = TTResourceLoaderTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.TTResourceLoaderTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TTResourceLoader.app/TTResourceLoader";
+			};
+			name = Debug;
+		};
+		475701ED1CAA5A6400AD588F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = TTResourceLoaderTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.TTResourceLoaderTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TTResourceLoader.app/TTResourceLoader";
+			};
+			name = Release;
+		};
+		475701EF1CAA5A6400AD588F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = TTResourceLoaderUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.TTResourceLoaderUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = TTResourceLoader;
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		475701F01CAA5A6400AD588F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = TTResourceLoaderUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.TTResourceLoaderUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = TTResourceLoader;
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		475701B61CAA5A6400AD588F /* Build configuration list for PBXProject "TTResourceLoader" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				475701E61CAA5A6400AD588F /* Debug */,
+				475701E71CAA5A6400AD588F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		475701E81CAA5A6400AD588F /* Build configuration list for PBXNativeTarget "TTResourceLoader" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				475701E91CAA5A6400AD588F /* Debug */,
+				475701EA1CAA5A6400AD588F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		475701EB1CAA5A6400AD588F /* Build configuration list for PBXNativeTarget "TTResourceLoaderTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				475701EC1CAA5A6400AD588F /* Debug */,
+				475701ED1CAA5A6400AD588F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		475701EE1CAA5A6400AD588F /* Build configuration list for PBXNativeTarget "TTResourceLoaderUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				475701EF1CAA5A6400AD588F /* Debug */,
+				475701F01CAA5A6400AD588F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 475701B31CAA5A6400AD588F /* Project object */;
+}
