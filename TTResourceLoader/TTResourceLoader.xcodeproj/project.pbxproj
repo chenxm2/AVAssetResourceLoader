@@ -19,6 +19,9 @@
 		475701FA1CAA5B3500AD588F /* TTDownloadTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 475701F71CAA5B3500AD588F /* TTDownloadTask.m */; };
 		475701FE1CAA5E4400AD588F /* TTAVAssetResourceLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 475701FD1CAA5E4400AD588F /* TTAVAssetResourceLoader.m */; };
 		475702061CAA77F200AD588F /* TTMoviePlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 475702051CAA77F100AD588F /* TTMoviePlayerView.m */; };
+		475702171CAB7C1700AD588F /* TTDownloadTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 475702161CAB7C1700AD588F /* TTDownloadTaskManager.m */; };
+		4757021A1CAB86A600AD588F /* TTCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 475702191CAB86A600AD588F /* TTCache.m */; };
+		4757021E1CABB11800AD588F /* AutoCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 4757021D1CABB11800AD588F /* AutoCoding.m */; };
 		7B75A097BB457DC69AC7FE48 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2B3BF307E7041B809B605E /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -64,6 +67,13 @@
 		475701FD1CAA5E4400AD588F /* TTAVAssetResourceLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTAVAssetResourceLoader.m; sourceTree = "<group>"; };
 		475702041CAA77F100AD588F /* TTMoviePlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTMoviePlayerView.h; sourceTree = "<group>"; };
 		475702051CAA77F100AD588F /* TTMoviePlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTMoviePlayerView.m; sourceTree = "<group>"; };
+		475702151CAB7C1700AD588F /* TTDownloadTaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTDownloadTaskManager.h; sourceTree = "<group>"; };
+		475702161CAB7C1700AD588F /* TTDownloadTaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTDownloadTaskManager.m; sourceTree = "<group>"; };
+		475702181CAB86A600AD588F /* TTCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCache.h; sourceTree = "<group>"; };
+		475702191CAB86A600AD588F /* TTCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCache.m; sourceTree = "<group>"; };
+		4757021C1CABB11800AD588F /* AutoCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoCoding.h; sourceTree = "<group>"; };
+		4757021D1CABB11800AD588F /* AutoCoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoCoding.m; sourceTree = "<group>"; };
+		4757021F1CABB18000AD588F /* TTResourceLoader-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TTResourceLoader-Prefix.pch"; sourceTree = "<group>"; };
 		BA681C8540B86EA79A2494D7 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		D203B01EA4696167AD31CEC8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		DF2B3BF307E7041B809B605E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -137,6 +147,7 @@
 		475701BD1CAA5A6400AD588F /* TTResourceLoader */ = {
 			isa = PBXGroup;
 			children = (
+				4757021B1CABB11800AD588F /* AutoCoding */,
 				475702031CAA77C900AD588F /* TTMoviePlayer */,
 				475701FB1CAA5E1900AD588F /* TTAVAssetResourceLoader */,
 				475701F11CAA5B3500AD588F /* TTDownload */,
@@ -157,6 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				475701BF1CAA5A6400AD588F /* main.m */,
+				4757021F1CABB18000AD588F /* TTResourceLoader-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -186,6 +198,10 @@
 				475701F51CAA5B3500AD588F /* TTDownloadSegment.m */,
 				475701F61CAA5B3500AD588F /* TTDownloadTask.h */,
 				475701F71CAA5B3500AD588F /* TTDownloadTask.m */,
+				475702151CAB7C1700AD588F /* TTDownloadTaskManager.h */,
+				475702161CAB7C1700AD588F /* TTDownloadTaskManager.m */,
+				475702181CAB86A600AD588F /* TTCache.h */,
+				475702191CAB86A600AD588F /* TTCache.m */,
 			);
 			path = TTDownload;
 			sourceTree = "<group>";
@@ -206,6 +222,15 @@
 				475702051CAA77F100AD588F /* TTMoviePlayerView.m */,
 			);
 			path = TTMoviePlayer;
+			sourceTree = "<group>";
+		};
+		4757021B1CABB11800AD588F /* AutoCoding */ = {
+			isa = PBXGroup;
+			children = (
+				4757021C1CABB11800AD588F /* AutoCoding.h */,
+				4757021D1CABB11800AD588F /* AutoCoding.m */,
+			);
+			path = AutoCoding;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -373,9 +398,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4757021A1CAB86A600AD588F /* TTCache.m in Sources */,
 				475701FE1CAA5E4400AD588F /* TTAVAssetResourceLoader.m in Sources */,
 				475701FA1CAA5B3500AD588F /* TTDownloadTask.m in Sources */,
+				475702171CAB7C1700AD588F /* TTDownloadTaskManager.m in Sources */,
 				475701C61CAA5A6400AD588F /* ViewController.m in Sources */,
+				4757021E1CABB11800AD588F /* AutoCoding.m in Sources */,
 				475701F91CAA5B3500AD588F /* TTDownloadSegment.m in Sources */,
 				475701C31CAA5A6400AD588F /* AppDelegate.m in Sources */,
 				475701C01CAA5A6400AD588F /* main.m in Sources */,
@@ -521,6 +549,8 @@
 			baseConfigurationReference = BA681C8540B86EA79A2494D7 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TTResourceLoader/TTResourceLoader-Prefix.pch";
 				INFOPLIST_FILE = TTResourceLoader/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.TTResourceLoader;
@@ -533,6 +563,8 @@
 			baseConfigurationReference = D203B01EA4696167AD31CEC8 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TTResourceLoader/TTResourceLoader-Prefix.pch";
 				INFOPLIST_FILE = TTResourceLoader/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.TTResourceLoader;

@@ -13,9 +13,9 @@
 
 const NSInteger kDefaultSegmentBytes = 1024 * 100; //100 K
 
-@implementation RLContentInformation
+@implementation TTContentInformation
 
-- (instancetype)initWithResponse:(NSURLResponse *)response
+- (instancetype)initWithResponse:(NSHTTPURLResponse *)response
 {
     self = [super init];
     if (self) {
@@ -24,9 +24,20 @@ const NSInteger kDefaultSegmentBytes = 1024 * 100; //100 K
         
         _contentType = CFBridgingRelease(contentType);
         _contentLength = response.expectedContentLength;
-        _validDataRangeArray = [[NSMutableArray alloc] init];
-        _validDataRangeArray = [[NSMutableArray alloc] init];
+        _validDataRangeArray = [NSMutableArray array];
+        
+        NSDictionary *headField = [response allHeaderFields];
+        id value = [headField objectForKey:@"Accept-Ranges"];
+        if ([value isKindOfClass:[NSString class]] && [value isEqualToString:@"bytes"])
+        {
+            _byteRangeAccessSupported = YES;
+        }
+        else
+        {
+            _byteRangeAccessSupported = NO;
+        }
     }
+    
     return self;
 }
 @end
@@ -34,41 +45,46 @@ const NSInteger kDefaultSegmentBytes = 1024 * 100; //100 K
 @interface TTDownloadTask () <TTDownloadSegmentDelegate>
 @property (nonatomic, strong) NSURL *url;
 @property (nonatomic, strong) AFHTTPRequestOperationManager *httpRequestManager;
-@property (nonatomic, strong) RLContentInformation *contentInformation;
+@property (nonatomic, strong) TTContentInformation *contentInformation;
 @property (nonatomic, strong) NSMutableArray *segmentArray;
+@property (nonatomic, strong) NSMutableDictionary *segmentDictionary;
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
-@property (nonatomic, strong) NSMutableData *data;
-
-@property (nonatomic, assign) NSInteger segmentCount;
 @end
 
 @implementation TTDownloadTask
 
 - (id)initWithURL:(NSURL *)url
 {
+    return [self initWithURL:url downloadSegmentBytesSize:kDefaultSegmentBytes];
+}
+
+- (id)initWithURL:(NSURL *)url downloadSegmentBytesSize:(NSUInteger)size
+{
     self = [super init];
-    
     if (self)
     {
         _url = url;
+        _segmentBytesSize = size;
         self.httpRequestManager = [[AFHTTPRequestOperationManager alloc] init];
         self.httpRequestManager.responseSerializer = [[AFHTTPResponseSerializer alloc] init];
         self.httpRequestManager.requestSerializer = [[AFHTTPRequestSerializer alloc] init];
         self.httpRequestManager.requestSerializer.cachePolicy = NSURLRequestReloadIgnoringCacheData;
         self.segmentArray = [[NSMutableArray alloc] init];
+        self.segmentDictionary = [NSMutableDictionary dictionary];
         self.operationQueue = [[NSOperationQueue alloc] init];
         self.operationQueue.maxConcurrentOperationCount = 3;
     }
     
     return self;
+
 }
 
 - (void)startTask:(void (^)(BOOL success))successBlock;
 {
     [self.httpRequestManager HEAD:[self.url absoluteString] parameters:nil success:^(AFHTTPRequestOperation *operation) {
-        self.contentInformation = [[RLContentInformation alloc] initWithResponse:operation.response];
+        self.contentInformation = [[TTContentInformation alloc] initWithResponse:operation.response];
         
-        _data = [NSMutableData dataWithLength:self.contentInformation.contentLength];
+//        _data = [NSMutableData dataWithLength:self.contentInformation.contentLength];
         
         [self createSegments];
         if (successBlock)
@@ -86,70 +102,61 @@ const NSInteger kDefaultSegmentBytes = 1024 * 100; //100 K
 
 - (void)createSegments
 {
-    unsigned long long mod = self.contentInformation.contentLength % kDefaultSegmentBytes;
-    unsigned long long count = self.contentInformation.contentLength / kDefaultSegmentBytes;
-    unsigned long long currentOffset = 0;
+    NSUInteger segmentBytesSize = self.segmentBytesSize;
     
-    self.segmentCount = count;
+    if (!self.contentInformation.byteRangeAccessSupported)
+    {
+        segmentBytesSize = self.contentInformation.contentLength;
+    }
+    
+    if (segmentBytesSize == 0)
+    {
+        segmentBytesSize = kDefaultSegmentBytes;
+    }
+    
+    unsigned long long mod = self.contentInformation.contentLength % segmentBytesSize;
+    unsigned long long count = self.contentInformation.contentLength / segmentBytesSize;
+    unsigned long long currentOffset = 0;
     
     NSLog(@"createSegments%llu", count);
     
     for (NSInteger i = 0; i < count; i++)
     {
-        if (![self isHadCacheWithOffest:currentOffset])
-        {
-            TTDownloadSegment *segment = [[TTDownloadSegment alloc] initWithURL:self.url offset:currentOffset length:kDefaultSegmentBytes manager:self.httpRequestManager];
-            
-            segment.delegate = self;
-            [self.segmentArray addObject:segment];
-            [self.operationQueue addOperation:segment.operation];
-        }
-        
-        currentOffset += kDefaultSegmentBytes;
+        [self createSegmentWithURL:self.url offset:currentOffset length:segmentBytesSize];
+        currentOffset += segmentBytesSize;
     }
     
-    if (mod > 0 && ![self isHadCacheWithOffest:currentOffset])
+    if (mod > 0)
     {
-        self.segmentCount ++;
-        
-         TTDownloadSegment *segment = [[TTDownloadSegment alloc] initWithURL:self.url offset:currentOffset length:mod manager:self.httpRequestManager];
-        
-        segment.delegate = self;
-        [self.segmentArray addObject:segment];
-        [self.operationQueue addOperation:segment.operation];
+        [self createSegmentWithURL:self.url offset:currentOffset length:mod];
     }
 }
 
-- (BOOL)isHadCacheWithOffest:(unsigned long long)offset
+- (void)createSegmentWithURL:(NSURL *)url offset:(unsigned long long)offset length:(unsigned long long)length
 {
-    BOOL result = NO;
+    TTDownloadSegment *segment = [[TTDownloadSegment alloc] initWithURL:url offset:offset length:length manager:self.httpRequestManager];
+    segment.delegate = self;
+    [self.segmentArray addObject:segment];
+    NSString *key = [NSString stringWithFormat:@"%llu", segment.offset];
+    [self.segmentDictionary setObject:segment forKey:key];
     
-    for (NSValue *value in self.contentInformation.validDataRangeArray)
+    AFHTTPRequestOperation *operation = [segment generateOperation];
+    if (operation)
     {
-        NSRange range = [value rangeValue];
-        if  (range.location == offset)
-        {
-            result = YES;
-            break;
-        }
+        [self.operationQueue addOperation:operation];
     }
-        
-    return result;
 }
 
 #pragma mark - RLDownloadSegmentDelegate
 
 - (void)didSegmentFinished:(TTDownloadSegment *)segment
 {
-    
     static int count = 0;
-    count ++;
+    count++;
     
     NSRange range = NSMakeRange(segment.offset, segment.length);
-    [self.data replaceBytesInRange:range withBytes:[segment.operation.responseData bytes]];
     
     NSLog(@"didSegmentFinished %@", [NSValue valueWithRange:range]);
-    
     
     long insertIndex = 0;
     BOOL findIndex = NO;
@@ -173,93 +180,168 @@ const NSInteger kDefaultSegmentBytes = 1024 * 100; //100 K
         insertIndex = i;
     }
     
-    
     [self.contentInformation.validDataRangeArray insertObject:[NSValue valueWithRange:range] atIndex:insertIndex];
     
     NSLog(@"didSegmentFinished:%lu", (unsigned long)[self.contentInformation.validDataRangeArray count]);
     NSLog(@"didSegmentFinished offset:%llu, length:%llu, destOffset:%llu", segment.offset, segment.length, segment.offset + segment.length);
     
-    
     [self.delegate didRLDownloadTaskDataRefresh:self];
-    
-    if (count == self.segmentCount)
-    {
-        NSLog(@"%@", self.contentInformation.validDataRangeArray);
-        
-        
-        NSArray *pathcaches=NSSearchPathForDirectoriesInDomains(NSCachesDirectory
-                                                                , NSUserDomainMask
-                                                                , YES);
-        NSString* cacheDirectory  = [pathcaches objectAtIndex:0];
-        NSString* filePath = [cacheDirectory stringByAppendingPathComponent:@"cachevideo.mp4"];
-        
-        NSLog(@"%@", filePath);
-        
-
-        
-        
-        NSMutableData *finishedData = [NSMutableData data];
-        for (NSInteger i = 0; i < count; i++)
-        {
-            TTDownloadSegment *segment = [self.segmentArray objectAtIndex:i];
-            [finishedData appendData:segment.operation.responseData];
-        }
-    }
-    
 }
 
-- (NSData *)dataWithOffset:(unsigned long long)offset length:(unsigned long long)length actuallyReadLength:(unsigned long long *)actullyLength
+- (void)dataWithOffset:(unsigned long long)offset length:(unsigned long long)length completedBlock:(void (^) (NSData *data, unsigned long long offset,  unsigned long long actullyLength))completeBlock
 {
-    NSMutableData *result = [[NSMutableData alloc] init];
-    *actullyLength = 0;
+    unsigned long long actullyLength = 0;
     
     NSRange compareRange = NSMakeRange(offset, length);
-    
     NSRange mergeRange = NSMakeRange(0, 0);
+    
+    NSMutableArray *validSegments = [NSMutableArray array];
+    
     BOOL hasData = NO;
-
     for (NSInteger i = 0; i < [self.contentInformation.validDataRangeArray count]; i++)
     {
         
         NSValue *value = [self.contentInformation.validDataRangeArray objectAtIndex:i];
         NSRange range = [value rangeValue];
         
-        NSRange intersectionRange = NSIntersectionRange(range, compareRange);
+        NSString *key = [NSString stringWithFormat:@"%lu", (unsigned long)range.location];
         
+        NSRange intersectionRange = NSIntersectionRange(range, compareRange);
+        //有交集，且location等于请求的offest
         if (intersectionRange.length != 0 && intersectionRange.location == compareRange.location)
         {
             hasData = YES;
             if (mergeRange.length == 0)
             {
                 mergeRange = range;
+                [validSegments addObject:[self.segmentDictionary objectForKey:key]];
             }
         }
         else if (hasData && intersectionRange.length != 0)
         {
+            //如果下一个也有交集，那么判断这两个有效的range是否是连在一起的，是的话就继续加上长度
             if (mergeRange.location + mergeRange.length == range.location)
             {
+                [validSegments addObject:[self.segmentDictionary objectForKey:key]];
                 mergeRange.length += range.length;
             }
         }
     }
-
-    NSLog(@"mergeRange:%@", [NSValue valueWithRange:mergeRange]);
     
+    NSLog(@"mergeRange:%@", [NSValue valueWithRange:mergeRange]);
     if (hasData)
     {
         NSRange actullyReadRange = NSMakeRange(0, 0);
-        NSUInteger startOffset = compareRange.location;
+        NSUInteger startOffset = offset;
         actullyReadRange.location = startOffset;
-        
-        
+        //返回实际要返回的大小
         NSUInteger minLength = MIN(length, mergeRange.location + mergeRange.length - startOffset);
-        
         actullyReadRange.length = minLength;
-        *actullyLength = (unsigned long long)minLength;
-        
-        [result appendData:[self.data subdataWithRange:actullyReadRange]]; //要读文件以后，并cahe起来
-        
+        [self dataWithValidSegments:validSegments actullyReadRange:actullyReadRange completedBlock:completeBlock];
     }
-    return result;
+    else
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completeBlock)
+            {
+                completeBlock(nil, offset, actullyLength);
+            }
+        });
+    }
 }
+
+- (void)dataWithValidSegments:(NSArray *)validSegments actullyReadRange:(NSRange)actullyReadRange completedBlock:(void (^) (NSData *data, unsigned long long offset,  unsigned long long actullyLength))completeBlock
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSData *resultData = nil;
+        NSMutableData *tmpData = [NSMutableData data];
+        
+        unsigned long long tmpDataOffset = 0;
+        unsigned long long tmpDataLength = 0;
+        
+        for (NSUInteger i = 0; i < [validSegments count]; i++)
+        {
+            TTDownloadSegment *segment = [validSegments objectAtIndex:i];
+            NSData *data = [segment segmentData];
+            [tmpData appendData:data];
+            
+            if (i == 0)
+            {
+                tmpDataOffset = segment.offset;
+            }
+            tmpDataLength += [data length];
+        }
+        
+        unsigned long long cutLocation = actullyReadRange.location - tmpDataOffset;
+        
+        if (cutLocation + actullyReadRange.length <= [tmpData length])
+        {
+            resultData = [tmpData subdataWithRange:NSMakeRange(cutLocation, actullyReadRange.length)];
+        }
+        else
+        {
+            NSLog(@"dataWithOffset exeption");
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completeBlock)
+            {
+                completeBlock(resultData, actullyReadRange.location, actullyReadRange.length);
+            }
+        });
+    });
+}
+
+//- (NSData *)dataWithOffset:(unsigned long long)offset length:(unsigned long long)length actuallyReadLength:(unsigned long long *)actullyLength
+//{
+//    NSMutableData *result = [[NSMutableData alloc] init];
+//    *actullyLength = 0;
+//    
+//    NSRange compareRange = NSMakeRange(offset, length);
+//    
+//    NSRange mergeRange = NSMakeRange(0, 0);
+//    BOOL hasData = NO;
+//
+//    for (NSInteger i = 0; i < [self.contentInformation.validDataRangeArray count]; i++)
+//    {
+//        
+//        NSValue *value = [self.contentInformation.validDataRangeArray objectAtIndex:i];
+//        NSRange range = [value rangeValue];
+//        
+//        NSRange intersectionRange = NSIntersectionRange(range, compareRange);
+//        //有交集，且location等于请求的offest
+//        if (intersectionRange.length != 0 && intersectionRange.location == compareRange.location)
+//        {
+//            hasData = YES;
+//            if (mergeRange.length == 0)
+//            {
+//                mergeRange = range;
+//            }
+//        }
+//        else if (hasData && intersectionRange.length != 0)
+//        {
+//            //如果下一个也有交集，那么判断这两个有效的range是否是连在一起的，是的话就继续加上长度
+//            if (mergeRange.location + mergeRange.length == range.location)
+//            {
+//                mergeRange.length += range.length;
+//            }
+//        }
+//    }
+//
+//    NSLog(@"mergeRange:%@", [NSValue valueWithRange:mergeRange]);
+//    
+//    if (hasData)
+//    {
+//        NSRange actullyReadRange = NSMakeRange(0, 0);
+//        NSUInteger startOffset = compareRange.location;
+//        actullyReadRange.location = startOffset;
+//        
+//        //返回实际要返回的大小
+//        NSUInteger minLength = MIN(length, mergeRange.location + mergeRange.length - startOffset);
+//        
+//        actullyReadRange.length = minLength;
+//        *actullyLength = (unsigned long long)minLength;
+//        
+//    }
+//    return result;
+//}
 @end

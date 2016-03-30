@@ -8,12 +8,8 @@
 
 #import <Foundation/Foundation.h>
 @class TTDownloadTask;
+@class TTContentInformation;
 
-@interface RLContentInformation : NSObject
-@property (nonatomic, assign)unsigned long long contentLength;
-@property (nonatomic, copy) NSString *contentType;
-@property (nonatomic, strong) NSMutableArray *validDataRangeArray;   //had sorted
-@end
 
 @protocol TTDownloadTaskDelegate <NSObject>
 @optional
@@ -21,16 +17,30 @@
 - (void)didRLDownloadTaskDataFinished:(TTDownloadTask *)downloadTask;
 @end
 
-@interface TTDownloadTask : NSObject
-@property (nonatomic, copy) NSString *filePath;
+@interface TTContentInformation : NSObject
+@property (nonatomic, assign)unsigned long long contentLength;
+@property (nonatomic, copy) NSString *contentType;
+@property (nonatomic, assign) BOOL byteRangeAccessSupported;
+@property (nonatomic, assign) NSUInteger segmentBytesSize;
+@property (nonatomic, strong) NSMutableArray *validDataRangeArray;   //had sorted
+@end
 
-@property (nonatomic, readonly, strong) RLContentInformation *contentInformation;
+@interface TTDownloadTask : NSObject
+@property (nonatomic, readonly, strong) TTContentInformation *contentInformation;
 @property (nonatomic, readonly, strong) NSURL *url;
 @property (nonatomic, weak) id<TTDownloadTaskDelegate> delegate;
 @property (nonatomic, readonly) NSArray *allRLDownloadSegment;
+@property (nonatomic, readonly) NSUInteger segmentBytesSize;
+
+- (instancetype)init UNAVAILABLE_ATTRIBUTE;
++ (instancetype)new UNAVAILABLE_ATTRIBUTE;
 
 - (id)initWithURL:(NSURL *)url;
+- (id)initWithURL:(NSURL *)url downloadSegmentBytesSize:(NSUInteger)size NS_DESIGNATED_INITIALIZER;
 - (void)startTask:(void (^)(BOOL success))successBlock;
 
-- (NSData *)dataWithOffset:(unsigned long long)offset length:(unsigned long long)length actuallyReadLength:(unsigned long long *)actuLength;
+- (void)dataWithOffset:(unsigned long long)offset length:(unsigned long long)length completedBlock:(void (^) (NSData *data, unsigned long long offset,  unsigned long long actullyLength))completeBlock;
+
+//- (NSData *)dataWithOffset:(unsigned long long)offset length:(unsigned long long)length actuallyReadLength:(unsigned long long *)actuLength;
+
 @end

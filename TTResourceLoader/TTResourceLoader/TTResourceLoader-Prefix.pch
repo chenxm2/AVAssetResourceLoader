@@ -1,0 +1,24 @@
+//
+//  TTResourceLoader-Prefix.h
+//  TTResourceLoader
+//
+//  Created by xianmingchen on 16/3/30.
+//  Copyright © 2016年 xianmingchen. All rights reserved.
+//
+
+#ifndef TTResourceLoader_Prefix_h
+#define TTResourceLoader_Prefix_h
+
+
+#ifndef __IPHONE_3_0
+#warning "This project uses features only available in iOS SDK 3.0 and later."
+#endif
+
+#ifdef __OBJC__
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import "AutoCoding.h"
+#endif
+
+
+#endif /* TTResourceLoader_Prefix_h */
