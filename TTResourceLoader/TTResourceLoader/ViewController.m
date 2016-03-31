@@ -30,6 +30,19 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+- (IBAction)stopClicked:(id)sender {
+    [self.playerView setPlayer:nil];
+    if (self.currentItem)
+    {
+        [self.currentItem removeObserver:self forKeyPath:@"status" context:NULL];
+        self.currentItem = nil;
+    }
+    self.player = nil;
+    [self.ttAVAssetResourceLoader stopTimer];
+    self.ttAVAssetResourceLoader = nil;
+
+
+}
 - (IBAction)playerClicked:(id)sender {
 
     if (self.currentItem)
@@ -55,9 +68,9 @@
 - (NSURL *)songURL
 {
     //短
-    //    return [NSURL URLWithString:@"http://godmusic.bs2dl.yy.com/godmusicAdmin_1420701586213_h264.mp4"];
+        return [NSURL URLWithString:@"http://godmusic.bs2dl.yy.com/godmusicAdmin_1420701586213_h264.mp4"];
     //长
-    return [NSURL URLWithString:@"http://godmusic.bs2dl.yy.com/godmusicAdmin_1419559724587_h264.mp4"];
+//    return [NSURL URLWithString:@"http://godmusic.bs2dl.yy.com/godmusicAdmin_1419559724587_h264.mp4"];
 }
     
 - (NSURL *)songURLWithCustomScheme:(NSString *)scheme

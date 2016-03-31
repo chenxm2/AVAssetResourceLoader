@@ -41,6 +41,8 @@
 
 - (void)dataWithOffset:(unsigned long long)offset length:(unsigned long long)length completedBlock:(void (^) (NSData *data, unsigned long long offset,  unsigned long long actullyLength))completeBlock;
 
+- (void)generateTaskFileCompletedBlock:(void (^)(NSString *filePath, NSError *error))completeBlock;
+
 //- (NSData *)dataWithOffset:(unsigned long long)offset length:(unsigned long long)length actuallyReadLength:(unsigned long long *)actuLength;
 
 @end

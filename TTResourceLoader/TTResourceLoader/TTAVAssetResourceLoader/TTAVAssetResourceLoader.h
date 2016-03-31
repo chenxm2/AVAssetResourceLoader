@@ -9,4 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 @interface TTAVAssetResourceLoader : NSObject <AVAssetResourceLoaderDelegate>
+
+- (void)stopTimer;
 @end

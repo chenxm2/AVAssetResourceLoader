@@ -11,7 +11,7 @@
 #import "TTDownloadSegment.h"
 #import "AFURLResponseSerialization.h"
 
-const NSInteger kDefaultSegmentBytes = 1024 * 100; //100 K
+const NSInteger kDefaultSegmentBytes = 1024 * 500; //100 K
 
 @implementation TTContentInformation
 
@@ -73,6 +73,7 @@ const NSInteger kDefaultSegmentBytes = 1024 * 100; //100 K
         self.segmentDictionary = [NSMutableDictionary dictionary];
         self.operationQueue = [[NSOperationQueue alloc] init];
         self.operationQueue.maxConcurrentOperationCount = 3;
+//        self.operationQueue set
     }
     
     return self;

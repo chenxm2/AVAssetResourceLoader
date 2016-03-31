@@ -11,7 +11,9 @@
 
 @interface TTAVAssetResourceLoader () <TTDownloadTaskDelegate>
 @property (nonatomic, strong) NSMutableArray *pendingRequests;
+@property (nonatomic, strong) NSMutableArray *waitingRequest;
 @property (nonatomic, strong) TTDownloadTask *downloadTask;
+@property (nonatomic, strong) NSTimer *timer;
 
 @end
 
@@ -23,6 +25,7 @@
     
     if (self) {
         self.pendingRequests = [NSMutableArray array];
+        self.waitingRequest = [NSMutableArray array];
     }
     
     return self;
@@ -43,9 +46,11 @@
     contentInformationRequest.contentLength = self.downloadTask.contentInformation.contentLength;
 }
 
-- (void)respondWithDataForRequest:(AVAssetResourceLoadingRequest *)loadingReauest completedBlock:(void (^)(BOOL isRespondFully, AVAssetResourceLoadingRequest *loadingReauest))completedBlock
+- (void)respondWithDataForRequest:(AVAssetResourceLoadingRequest *)loadingReauest completedBlock:(void (^)(BOOL isRespondFully, AVAssetResourceLoadingRequest *loadingReauest, unsigned long long actullyLength))completedBlock
 {
     __block BOOL didRespondFully = NO;
+    
+//    static unsigned long long currentMaxStartOffset = 0;
     
     AVAssetResourceLoadingDataRequest *dataRequest = loadingReauest.dataRequest;
     
@@ -55,62 +60,52 @@
         startOffset = dataRequest.currentOffset;
     }
     
-    
-    
-//    NSData *data = [self.downloadTask dataWithOffset:startOffset length:dataRequest.requestedLength actuallyReadLength:&actuallyLenngth];
-    
     [self.downloadTask dataWithOffset:startOffset length:dataRequest.requestedLength completedBlock:^(NSData *data, unsigned long long offset, unsigned long long actullyLength) {
         if (actullyLength > 0 && data)
         {
             [dataRequest respondWithData:data];
-            didRespondFully = ((actullyLength + startOffset) >= dataRequest.requestedLength);
+            
+            NSLog(@"respondWithDataForRequest:startOffet:%lld, actullyLength:%llu, dataLength:%lu, offset:%llu", startOffset, actullyLength, (unsigned long)[data length], offset);
+            
+            didRespondFully = ((actullyLength + startOffset) >= dataRequest.requestedLength + dataRequest.requestedOffset);
             if (completedBlock)
             {
-                completedBlock(didRespondFully, loadingReauest);
+                completedBlock(didRespondFully, loadingReauest, actullyLength);
             }
         }
         else
         {
             if (completedBlock)
             {
-                completedBlock(didRespondFully, loadingReauest);
+                completedBlock(didRespondFully, loadingReauest, actullyLength);
             }
 
         }
         
     }];
+    
 }
     
-//- (BOOL)respondWithDataForRequest:(AVAssetResourceLoadingDataRequest *)dataRequest
-//{
-//    static unsigned long long allrespondLeng = 0;
-//    
-//    BOOL didRespondFully = NO;
-//    
-//    long long startOffset = dataRequest.requestedOffset;
-//    if (dataRequest.currentOffset != 0)
-//    {
-//        startOffset = dataRequest.currentOffset;
-//    }
-//    
-//    unsigned long long actuallyLenngth = 0;
-//    
-//    
-//    NSData *data = [self.downloadTask dataWithOffset:startOffset length:dataRequest.requestedLength actuallyReadLength:&actuallyLenngth];
-//    
-//    
-//    allrespondLeng += actuallyLenngth;
-//    
-//    if (actuallyLenngth != 0)
-//    {
-//        [dataRequest respondWithData:data];
-//        didRespondFully = ((actuallyLenngth + startOffset) >= dataRequest.requestedLength);
-//        
-//    }
-//    
-//    return didRespondFully;
-//}
-    
+- (void)startTimer
+{
+    self.timer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(_timerFire:) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+}
+
+- (void)_timerFire:(NSTimer *)timer
+{
+    if ([self.waitingRequest count] > 0)
+    {
+        [self processWaitingRequests];
+    }
+    else
+    {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
+}
+
+
     
 - (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest
 {
@@ -128,9 +123,14 @@
         }];
     }
     
-    [self.pendingRequests addObject:loadingRequest];
+    if (![self.waitingRequest containsObject:loadingRequest]) {
+        [self.waitingRequest addObject:loadingRequest];
+    }
     
-    [self processPendingRequests];
+    if (self.timer == nil)
+    {
+        [self startTimer];
+    }
     
     return YES;
 }
@@ -138,45 +138,48 @@
 - (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
 {
     [self.pendingRequests removeObject:loadingRequest];
+    [self.waitingRequest removeObject:loadingRequest];
         
     NSLog(@"didCancelLoadingRequest:%@", loadingRequest);
         
 }
 
-- (void)processPendingRequests
+- (void)processWaitingRequests
 {
-//    NSMutableArray *requestsCompleted = [NSMutableArray array];
-    
     NSLog(@"processPendingRequests being");
-    
     __weak typeof(self)weakSelf = self;
-    for (AVAssetResourceLoadingRequest *loadingRequest in self.pendingRequests)
+    
+    
+    for (AVAssetResourceLoadingRequest *loadingRequest in self.waitingRequest)
     {
+        if ([self.pendingRequests containsObject:loadingRequest])
+        {
+            continue;
+        }
+        else
+        {
+            [self.pendingRequests addObject:loadingRequest];
+        }
+        
         [self fillInContentInformation:loadingRequest.contentInformationRequest];
-        
-//        BOOL didRespondCompletely = [self respondWithDataForRequest:loadingRequest.dataRequest];
-        
-        [self respondWithDataForRequest:loadingRequest completedBlock:^(BOOL isRespondFully, AVAssetResourceLoadingRequest *loadingReauest) {
-            
+        [self respondWithDataForRequest:loadingRequest completedBlock:^(BOOL isRespondFully, AVAssetResourceLoadingRequest *loadingReauest, unsigned long long actullyLength) {
             if (isRespondFully)
             {
+                NSLog(@"finished loadingRequest :%@", loadingReauest);
                 [loadingRequest finishLoading];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    __strong typeof(weakSelf)strongSelf = weakSelf;
-                    [strongSelf.pendingRequests removeObject:loadingRequest];
-                });
+                __strong typeof(weakSelf)strongSelf = weakSelf;
+                [strongSelf.pendingRequests removeObject:loadingRequest];
+            }
+            else
+            {
+                [self.pendingRequests removeObject:loadingReauest];
+                [self.waitingRequest addObject:loadingReauest];
             }
         }];
         
-//        if (didRespondCompletely)
-//        {
-//            NSLog(@"didRespondCompletely");
-//            [requestsCompleted addObject:loadingRequest];
-//            [loadingRequest finishLoading];
-//        }
     }
     
-//    [self.pendingRequests removeObjectsInArray:requestsCompleted];
+    [self.waitingRequest removeObjectsInArray:self.pendingRequests];
     
     NSLog(@"processPendingRequests end");
 }
@@ -185,14 +188,12 @@
 #pragma mark -
 - (void)didRLDownloadTaskDataRefresh:(TTDownloadTask *)downloadTask
 {
-    [self processPendingRequests];
+    [self processWaitingRequests];
 }
 
 
 - (void)didRLDownloadTaskDataFinished:(TTDownloadTask *)downloadTask
 {
 }
-
-
 
 @end
