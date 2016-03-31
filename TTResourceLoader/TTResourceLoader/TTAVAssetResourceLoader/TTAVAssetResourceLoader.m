@@ -88,7 +88,7 @@
     
 - (void)startTimer
 {
-    self.timer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(_timerFire:) userInfo:nil repeats:YES];
+    self.timer = [NSTimer timerWithTimeInterval:3 target:self selector:@selector(_timerFire:) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
 }
 
@@ -100,11 +100,15 @@
     }
     else
     {
-        [self.timer invalidate];
-        self.timer = nil;
+        [self stopTimer];
     }
 }
 
+- (void)stopTimer
+{
+    [self.timer invalidate];
+    self.timer = nil;
+}
 
     
 - (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest

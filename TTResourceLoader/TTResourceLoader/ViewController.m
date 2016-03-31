@@ -45,12 +45,7 @@
 }
 - (IBAction)playerClicked:(id)sender {
 
-    if (self.currentItem)
-    {
-        [self.currentItem removeObserver:self forKeyPath:@"status" context:NULL];
-        self.currentItem = nil;
-    }
-    
+    [self stopClicked:nil];
     
     self.ttAVAssetResourceLoader = [[TTAVAssetResourceLoader alloc] init];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[self songURLWithCustomScheme:@"stream"] options:nil];

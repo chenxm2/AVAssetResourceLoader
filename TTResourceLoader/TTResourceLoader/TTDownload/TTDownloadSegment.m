@@ -33,8 +33,6 @@
         self.offset = offset;
         self.length = length;
         self.yyCache = [TTCache cacheInstanceWithPath:[TTDownloadSegment downloadSegmentFullPath]];
-        [self startDownloadIfNeed];
-        
     }
     return self;
 }

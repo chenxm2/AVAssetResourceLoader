@@ -24,6 +24,8 @@
 @property (nonatomic, readonly) YYCache *yyCache;
 
 - (id)initWithURL:(NSURL *)url offset:(unsigned long long)offset length:(unsigned long long)length;
+- (void)startDownloadIfNeed;
+
 
 - (NSData *)segmentData;
 

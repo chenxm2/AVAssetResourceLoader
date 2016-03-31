@@ -7,9 +7,8 @@
 //
 
 #import "TTDownloadTask.h"
-#import "AFHTTPRequestOperationManager.h"
 #import "TTDownloadSegment.h"
-#import "AFURLResponseSerialization.h"
+#import <MobileCoreServices/MobileCoreServices.h>
 
 const NSInteger kDefaultSegmentBytes = 1024 * 10; //100 K
 
@@ -75,11 +74,12 @@ const NSInteger kDefaultSegmentBytes = 1024 * 10; //100 K
 {
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.url];
     [request setHTTPMethod:@"HEAD"];
+    request.cachePolicy = NSURLRequestReloadIgnoringCacheData;
     NSURLSession *session = [NSURLSession sharedSession];
     __weak typeof(self)weakSelf = self;
     NSURLSessionTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        if ([response isKindOfClass:[NSHTTPURLResponse class]] && ((NSHTTPURLResponse *)response).statusCode == 200)
+        if ([response isKindOfClass:[NSHTTPURLResponse class]] && (((NSHTTPURLResponse *)response).statusCode == 200 || ((NSHTTPURLResponse *)response).statusCode == 206))
         {
             strongSelf.contentInformation = [[TTContentInformation alloc] initWithResponse:(NSHTTPURLResponse *)response];
             [strongSelf createSegments];
@@ -135,6 +135,8 @@ const NSInteger kDefaultSegmentBytes = 1024 * 10; //100 K
     [self.segmentArray addObject:segment];
     NSString *key = [NSString stringWithFormat:@"%llu", segment.offset];
     [self.segmentDictionary setObject:segment forKey:key];
+    
+    [segment startDownloadIfNeed];
     
 }
 
@@ -281,58 +283,4 @@ const NSInteger kDefaultSegmentBytes = 1024 * 10; //100 K
         });
     });
 }
-
-//- (NSData *)dataWithOffset:(unsigned long long)offset length:(unsigned long long)length actuallyReadLength:(unsigned long long *)actullyLength
-//{
-//    NSMutableData *result = [[NSMutableData alloc] init];
-//    *actullyLength = 0;
-//    
-//    NSRange compareRange = NSMakeRange(offset, length);
-//    
-//    NSRange mergeRange = NSMakeRange(0, 0);
-//    BOOL hasData = NO;
-//
-//    for (NSInteger i = 0; i < [self.contentInformation.validDataRangeArray count]; i++)
-//    {
-//        
-//        NSValue *value = [self.contentInformation.validDataRangeArray objectAtIndex:i];
-//        NSRange range = [value rangeValue];
-//        
-//        NSRange intersectionRange = NSIntersectionRange(range, compareRange);
-//        //有交集，且location等于请求的offest
-//        if (intersectionRange.length != 0 && intersectionRange.location == compareRange.location)
-//        {
-//            hasData = YES;
-//            if (mergeRange.length == 0)
-//            {
-//                mergeRange = range;
-//            }
-//        }
-//        else if (hasData && intersectionRange.length != 0)
-//        {
-//            //如果下一个也有交集，那么判断这两个有效的range是否是连在一起的，是的话就继续加上长度
-//            if (mergeRange.location + mergeRange.length == range.location)
-//            {
-//                mergeRange.length += range.length;
-//            }
-//        }
-//    }
-//
-//    NSLog(@"mergeRange:%@", [NSValue valueWithRange:mergeRange]);
-//    
-//    if (hasData)
-//    {
-//        NSRange actullyReadRange = NSMakeRange(0, 0);
-//        NSUInteger startOffset = compareRange.location;
-//        actullyReadRange.location = startOffset;
-//        
-//        //返回实际要返回的大小
-//        NSUInteger minLength = MIN(length, mergeRange.location + mergeRange.length - startOffset);
-//        
-//        actullyReadRange.length = minLength;
-//        *actullyLength = (unsigned long long)minLength;
-//        
-//    }
-//    return result;
-//}
 @end
