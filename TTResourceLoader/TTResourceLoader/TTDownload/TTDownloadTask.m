@@ -11,7 +11,7 @@
 #import "TTDownloadSegment.h"
 #import "AFURLResponseSerialization.h"
 
-const NSInteger kDefaultSegmentBytes = 1024 * 500; //100 K
+const NSInteger kDefaultSegmentBytes = 1024 * 10; //100 K
 
 @implementation TTContentInformation
 
@@ -44,11 +44,9 @@ const NSInteger kDefaultSegmentBytes = 1024 * 500; //100 K
 
 @interface TTDownloadTask () <TTDownloadSegmentDelegate>
 @property (nonatomic, strong) NSURL *url;
-@property (nonatomic, strong) AFHTTPRequestOperationManager *httpRequestManager;
 @property (nonatomic, strong) TTContentInformation *contentInformation;
 @property (nonatomic, strong) NSMutableArray *segmentArray;
 @property (nonatomic, strong) NSMutableDictionary *segmentDictionary;
-@property (nonatomic, strong) NSOperationQueue *operationQueue;
 @end
 
 @implementation TTDownloadTask
@@ -65,15 +63,8 @@ const NSInteger kDefaultSegmentBytes = 1024 * 500; //100 K
     {
         _url = url;
         _segmentBytesSize = size;
-        self.httpRequestManager = [[AFHTTPRequestOperationManager alloc] init];
-        self.httpRequestManager.responseSerializer = [[AFHTTPResponseSerializer alloc] init];
-        self.httpRequestManager.requestSerializer = [[AFHTTPRequestSerializer alloc] init];
-        self.httpRequestManager.requestSerializer.cachePolicy = NSURLRequestReloadIgnoringCacheData;
         self.segmentArray = [[NSMutableArray alloc] init];
         self.segmentDictionary = [NSMutableDictionary dictionary];
-        self.operationQueue = [[NSOperationQueue alloc] init];
-        self.operationQueue.maxConcurrentOperationCount = 3;
-//        self.operationQueue set
     }
     
     return self;
@@ -82,22 +73,26 @@ const NSInteger kDefaultSegmentBytes = 1024 * 500; //100 K
 
 - (void)startTask:(void (^)(BOOL success))successBlock;
 {
-    [self.httpRequestManager HEAD:[self.url absoluteString] parameters:nil success:^(AFHTTPRequestOperation *operation) {
-        self.contentInformation = [[TTContentInformation alloc] initWithResponse:operation.response];
-        
-//        _data = [NSMutableData dataWithLength:self.contentInformation.contentLength];
-        
-        [self createSegments];
-        if (successBlock)
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.url];
+    [request setHTTPMethod:@"HEAD"];
+    NSURLSession *session = [NSURLSession sharedSession];
+    __weak typeof(self)weakSelf = self;
+    NSURLSessionTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        if ([response isKindOfClass:[NSHTTPURLResponse class]] && ((NSHTTPURLResponse *)response).statusCode == 200)
         {
-            successBlock(YES);
+            strongSelf.contentInformation = [[TTContentInformation alloc] initWithResponse:(NSHTTPURLResponse *)response];
+            [strongSelf createSegments];
         }
+        else
+        {
+            successBlock(NO);
+            NSLog(@"HEAD URL Fail:%@", error);
+        }
+
         
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-      
-        successBlock(NO);
-        NSLog(@"HEAD URL Fail:%@", error);
     }];
+    [dataTask resume];
 }
 
 
@@ -135,17 +130,12 @@ const NSInteger kDefaultSegmentBytes = 1024 * 500; //100 K
 
 - (void)createSegmentWithURL:(NSURL *)url offset:(unsigned long long)offset length:(unsigned long long)length
 {
-    TTDownloadSegment *segment = [[TTDownloadSegment alloc] initWithURL:url offset:offset length:length manager:self.httpRequestManager];
+    TTDownloadSegment *segment = [[TTDownloadSegment alloc] initWithURL:url offset:offset length:length];
     segment.delegate = self;
     [self.segmentArray addObject:segment];
     NSString *key = [NSString stringWithFormat:@"%llu", segment.offset];
     [self.segmentDictionary setObject:segment forKey:key];
     
-    AFHTTPRequestOperation *operation = [segment generateOperation];
-    if (operation)
-    {
-        [self.operationQueue addOperation:operation];
-    }
 }
 
 #pragma mark - RLDownloadSegmentDelegate

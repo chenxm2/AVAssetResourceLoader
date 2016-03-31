@@ -7,8 +7,7 @@
 //
 
 #import "TTDownloadSegment.h"
-#import "AFHTTPRequestOperationManager.h"
-#import "AFHTTPRequestOperation.h"
+
 #import "TTCache.h"
 
 #define kTTDownloadSegmentPath @"TTDownloadSegment"
@@ -17,14 +16,15 @@
 @property (nonatomic, assign) unsigned long long offset;
 @property (nonatomic, assign) unsigned long long length;
 @property (nonatomic, strong) NSURL *url;
-@property (nonatomic, strong) AFHTTPRequestOperationManager *manager;
 @property (nonatomic, strong) YYCache *yyCache;
-@property (nonatomic, strong) NSData *data;
+
+
+
 @end
 
 @implementation TTDownloadSegment
 
-- (id)initWithURL:(NSURL *)url offset:(unsigned long long)offset length:(unsigned long long)length manager:(AFHTTPRequestOperationManager *)manager
+- (id)initWithURL:(NSURL *)url offset:(unsigned long long)offset length:(unsigned long long)length
 {
     self = [super init];
     if (self)
@@ -32,59 +32,56 @@
         self.url = url;
         self.offset = offset;
         self.length = length;
-        self.manager = manager;
         self.yyCache = [TTCache cacheInstanceWithPath:[TTDownloadSegment downloadSegmentFullPath]];
+        [self startDownloadIfNeed];
+        
     }
     return self;
 }
 
-- (AFHTTPRequestOperation *)generateOperation
+- (void)startDownloadIfNeed
 {
-    AFHTTPRequestOperation *operationResult = nil;
-    
-    __weak typeof(self)weakSelf = self;
-    
     if (![self isDownloaded])
     {
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.url];
-        [request setValue:[NSString stringWithFormat:@"bytes=%lld-%lld", self.offset, self.offset + self.length - 1]  forHTTPHeaderField:@"Range"];
-        
-        operationResult = [self.manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            __strong typeof(weakSelf)strongSelf = weakSelf;
-            NSLog(@"TTDownloadSegment offset:%llu, length:%llu", strongSelf.offset, strongSelf.length);
-            NSLog(@"AFHTTPRequestOperation %@, objectLength:%lu", [operation.request allHTTPHeaderFields], (unsigned long)[responseObject length]);
-            
-            if ([responseObject length] != strongSelf.length)
-            {
-                 NSLog(@"XXXX");
-            }
-            
-            strongSelf.data = responseObject;
-            NSLog(@"[strongSelf downloadSegmentFileDataKey]:  %@" , [strongSelf downloadSegmentFileDataKey]);
-//            NSString *key = [strongSelf downloadSegmentFileDataKey];
-            
-            [strongSelf.yyCache setObject:responseObject forKey:[strongSelf downloadSegmentFileDataKey] withBlock:^{
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    __strong typeof(weakSelf)strongSelf = weakSelf;
-                   [strongSelf.delegate didSegmentFinished:strongSelf];
-                });
-            }];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error){
-            NSLog(@"_createOperation Fail:%@", error);
-        }];
-        
-        [operationResult setQueuePriority:NSOperationQueuePriorityVeryLow];
+        [self startDownload];
     }
     else
     {
+        __weak typeof(self)weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf)strongSelf = weakSelf;
             [strongSelf.delegate didSegmentFinished:strongSelf];
         });
     }
-    
-    return operationResult;
 }
+
+- (void)startDownload
+{
+    __weak typeof(self)weakSelf = self;
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.url];
+    [request setValue:[NSString stringWithFormat:@"bytes=%lld-%lld", self.offset, self.offset + self.length - 1]  forHTTPHeaderField:@"Range"];
+    NSURLSession *session = [NSURLSession sharedSession];
+    
+    NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        
+        if ([data length] != strongSelf.length)
+        {
+            NSLog(@"XXXX");
+        }
+        
+        [strongSelf.yyCache setObject:data forKey:[strongSelf downloadSegmentFileDataKey] withBlock:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(weakSelf)strongSelf = weakSelf;
+                [strongSelf.delegate didSegmentFinished:strongSelf];
+            });
+        }];
+        
+    }];
+    
+    [dataTask resume];
+}
+
 
 - (BOOL)isDownloaded
 {
@@ -109,13 +106,6 @@
     
     if ([data isKindOfClass:[NSData class]])
     {
-    
-        if (self.data && ![data isEqualToData:self.data])
-        {
-            NSLog(@"segmentData not equal");
-        }
-
-    
         return data;
     }
     
