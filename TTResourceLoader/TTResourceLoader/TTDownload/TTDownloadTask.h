@@ -8,8 +8,7 @@
 
 #import <Foundation/Foundation.h>
 @class TTDownloadTask;
-@class TTContentInformation;
-
+@class TTDownloadContentInfo;
 
 @protocol TTDownloadTaskDelegate <NSObject>
 @optional
@@ -17,16 +16,8 @@
 - (void)didRLDownloadTaskDataFinished:(TTDownloadTask *)downloadTask;
 @end
 
-@interface TTContentInformation : NSObject
-@property (nonatomic, assign)unsigned long long contentLength;
-@property (nonatomic, copy) NSString *contentType;
-@property (nonatomic, assign) BOOL byteRangeAccessSupported;
-@property (nonatomic, assign) NSUInteger segmentBytesSize;
-@property (nonatomic, strong) NSMutableArray *validDataRangeArray;   //had sorted
-@end
-
 @interface TTDownloadTask : NSObject
-@property (nonatomic, readonly, strong) TTContentInformation *contentInformation;
+@property (nonatomic, readonly, strong) TTDownloadContentInfo *downloadContentInfo;
 @property (nonatomic, readonly, strong) NSURL *url;
 @property (nonatomic, weak) id<TTDownloadTaskDelegate> delegate;
 @property (nonatomic, readonly) NSArray *allRLDownloadSegment;

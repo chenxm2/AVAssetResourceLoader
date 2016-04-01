@@ -8,6 +8,7 @@
 
 #import "TTAVAssetResourceLoader.h"
 #import "TTDownloadTask.h"
+#import "TTDownloadContentInfo.h"
 
 @interface TTAVAssetResourceLoader () <TTDownloadTaskDelegate>
 @property (nonatomic, strong) NSMutableArray *pendingRequests;
@@ -33,24 +34,23 @@
 
 - (void)fillInContentInformation:(AVAssetResourceLoadingContentInformationRequest *)contentInformationRequest
 {
-    if (contentInformationRequest == nil || self.downloadTask.contentInformation == nil)
+    if (contentInformationRequest == nil || self.downloadTask.downloadContentInfo == nil)
     {
         return;
     }
     
-    NSString *mimeType = [self.downloadTask.contentInformation contentType];
+    NSString *mimeType = [self.downloadTask.downloadContentInfo contentType];
     
     
     contentInformationRequest.byteRangeAccessSupported = YES;
     contentInformationRequest.contentType = mimeType;
-    contentInformationRequest.contentLength = self.downloadTask.contentInformation.contentLength;
+    contentInformationRequest.contentLength = self.downloadTask.downloadContentInfo.contentLength;
 }
 
 - (void)respondWithDataForRequest:(AVAssetResourceLoadingRequest *)loadingReauest completedBlock:(void (^)(BOOL isRespondFully, AVAssetResourceLoadingRequest *loadingReauest, unsigned long long actullyLength))completedBlock
 {
     __block BOOL didRespondFully = NO;
     
-//    static unsigned long long currentMaxStartOffset = 0;
     
     AVAssetResourceLoadingDataRequest *dataRequest = loadingReauest.dataRequest;
     
@@ -153,7 +153,6 @@
     NSLog(@"processPendingRequests being");
     __weak typeof(self)weakSelf = self;
     
-    
     for (AVAssetResourceLoadingRequest *loadingRequest in self.waitingRequest)
     {
         if ([self.pendingRequests containsObject:loadingRequest])
@@ -195,9 +194,7 @@
     [self processWaitingRequests];
 }
 
-
 - (void)didRLDownloadTaskDataFinished:(TTDownloadTask *)downloadTask
 {
 }
-
 @end

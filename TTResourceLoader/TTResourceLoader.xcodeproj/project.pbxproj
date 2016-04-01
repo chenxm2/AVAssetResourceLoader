@@ -20,9 +20,10 @@
 		475701FE1CAA5E4400AD588F /* TTAVAssetResourceLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 475701FD1CAA5E4400AD588F /* TTAVAssetResourceLoader.m */; };
 		475702061CAA77F200AD588F /* TTMoviePlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 475702051CAA77F100AD588F /* TTMoviePlayerView.m */; };
 		475702171CAB7C1700AD588F /* TTDownloadTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 475702161CAB7C1700AD588F /* TTDownloadTaskManager.m */; };
-		4757021A1CAB86A600AD588F /* TTCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 475702191CAB86A600AD588F /* TTCache.m */; };
 		4757021E1CABB11800AD588F /* AutoCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 4757021D1CABB11800AD588F /* AutoCoding.m */; };
 		475702271CAD539600AD588F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 475702261CAD539600AD588F /* MobileCoreServices.framework */; };
+		4757022A1CAE1FEE00AD588F /* TTDownloadContentInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 475702291CAE1FEE00AD588F /* TTDownloadContentInfo.m */; };
+		4757022D1CAE204800AD588F /* TTCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4757022C1CAE204800AD588F /* TTCache.m */; };
 		7B75A097BB457DC69AC7FE48 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2B3BF307E7041B809B605E /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -70,12 +71,14 @@
 		475702051CAA77F100AD588F /* TTMoviePlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTMoviePlayerView.m; sourceTree = "<group>"; };
 		475702151CAB7C1700AD588F /* TTDownloadTaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTDownloadTaskManager.h; sourceTree = "<group>"; };
 		475702161CAB7C1700AD588F /* TTDownloadTaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTDownloadTaskManager.m; sourceTree = "<group>"; };
-		475702181CAB86A600AD588F /* TTCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCache.h; sourceTree = "<group>"; };
-		475702191CAB86A600AD588F /* TTCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCache.m; sourceTree = "<group>"; };
 		4757021C1CABB11800AD588F /* AutoCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoCoding.h; sourceTree = "<group>"; };
 		4757021D1CABB11800AD588F /* AutoCoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoCoding.m; sourceTree = "<group>"; };
 		4757021F1CABB18000AD588F /* TTResourceLoader-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TTResourceLoader-Prefix.pch"; sourceTree = "<group>"; };
 		475702261CAD539600AD588F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		475702281CAE1FEE00AD588F /* TTDownloadContentInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTDownloadContentInfo.h; sourceTree = "<group>"; };
+		475702291CAE1FEE00AD588F /* TTDownloadContentInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTDownloadContentInfo.m; sourceTree = "<group>"; };
+		4757022B1CAE204800AD588F /* TTCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCache.h; sourceTree = "<group>"; };
+		4757022C1CAE204800AD588F /* TTCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCache.m; sourceTree = "<group>"; };
 		BA681C8540B86EA79A2494D7 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		D203B01EA4696167AD31CEC8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		DF2B3BF307E7041B809B605E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -155,6 +158,8 @@
 				475702031CAA77C900AD588F /* TTMoviePlayer */,
 				475701FB1CAA5E1900AD588F /* TTAVAssetResourceLoader */,
 				475701F11CAA5B3500AD588F /* TTDownload */,
+				4757022B1CAE204800AD588F /* TTCache.h */,
+				4757022C1CAE204800AD588F /* TTCache.m */,
 				475701C11CAA5A6400AD588F /* AppDelegate.h */,
 				475701C21CAA5A6400AD588F /* AppDelegate.m */,
 				475701C41CAA5A6400AD588F /* ViewController.h */,
@@ -204,8 +209,8 @@
 				475701F71CAA5B3500AD588F /* TTDownloadTask.m */,
 				475702151CAB7C1700AD588F /* TTDownloadTaskManager.h */,
 				475702161CAB7C1700AD588F /* TTDownloadTaskManager.m */,
-				475702181CAB86A600AD588F /* TTCache.h */,
-				475702191CAB86A600AD588F /* TTCache.m */,
+				475702281CAE1FEE00AD588F /* TTDownloadContentInfo.h */,
+				475702291CAE1FEE00AD588F /* TTDownloadContentInfo.m */,
 			);
 			path = TTDownload;
 			sourceTree = "<group>";
@@ -402,7 +407,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4757021A1CAB86A600AD588F /* TTCache.m in Sources */,
+				4757022D1CAE204800AD588F /* TTCache.m in Sources */,
 				475701FE1CAA5E4400AD588F /* TTAVAssetResourceLoader.m in Sources */,
 				475701FA1CAA5B3500AD588F /* TTDownloadTask.m in Sources */,
 				475702171CAB7C1700AD588F /* TTDownloadTaskManager.m in Sources */,
@@ -411,6 +416,7 @@
 				475701F91CAA5B3500AD588F /* TTDownloadSegment.m in Sources */,
 				475701C31CAA5A6400AD588F /* AppDelegate.m in Sources */,
 				475701C01CAA5A6400AD588F /* main.m in Sources */,
+				4757022A1CAE1FEE00AD588F /* TTDownloadContentInfo.m in Sources */,
 				475702061CAA77F200AD588F /* TTMoviePlayerView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

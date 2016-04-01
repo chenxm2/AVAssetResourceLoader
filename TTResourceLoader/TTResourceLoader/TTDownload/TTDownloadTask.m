@@ -8,42 +8,15 @@
 
 #import "TTDownloadTask.h"
 #import "TTDownloadSegment.h"
-#import <MobileCoreServices/MobileCoreServices.h>
+#import "TTDownloadContentInfo.h"
+
 
 const NSInteger kDefaultSegmentBytes = 1024 * 10; //100 K
 
-@implementation TTContentInformation
-
-- (instancetype)initWithResponse:(NSHTTPURLResponse *)response
-{
-    self = [super init];
-    if (self) {
-        NSString *mimeType = [response MIMEType];
-        CFStringRef contentType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)(mimeType), NULL);
-        
-        _contentType = CFBridgingRelease(contentType);
-        _contentLength = response.expectedContentLength;
-        _validDataRangeArray = [NSMutableArray array];
-        
-        NSDictionary *headField = [response allHeaderFields];
-        id value = [headField objectForKey:@"Accept-Ranges"];
-        if ([value isKindOfClass:[NSString class]] && [value isEqualToString:@"bytes"])
-        {
-            _byteRangeAccessSupported = YES;
-        }
-        else
-        {
-            _byteRangeAccessSupported = NO;
-        }
-    }
-    
-    return self;
-}
-@end
-
 @interface TTDownloadTask () <TTDownloadSegmentDelegate>
 @property (nonatomic, strong) NSURL *url;
-@property (nonatomic, strong) TTContentInformation *contentInformation;
+@property (nonatomic, strong) TTDownloadContentInfo *downloadContentInfo;
+@property (nonatomic, strong) NSMutableArray *validDataRangeArray;
 @property (nonatomic, strong) NSMutableArray *segmentArray;
 @property (nonatomic, strong) NSMutableDictionary *segmentDictionary;
 @end
@@ -62,6 +35,7 @@ const NSInteger kDefaultSegmentBytes = 1024 * 10; //100 K
     {
         _url = url;
         _segmentBytesSize = size;
+        self.validDataRangeArray = [NSMutableArray array];
         self.segmentArray = [[NSMutableArray alloc] init];
         self.segmentDictionary = [NSMutableDictionary dictionary];
     }
@@ -81,7 +55,7 @@ const NSInteger kDefaultSegmentBytes = 1024 * 10; //100 K
         __strong typeof(weakSelf)strongSelf = weakSelf;
         if ([response isKindOfClass:[NSHTTPURLResponse class]] && (((NSHTTPURLResponse *)response).statusCode == 200 || ((NSHTTPURLResponse *)response).statusCode == 206))
         {
-            strongSelf.contentInformation = [[TTContentInformation alloc] initWithResponse:(NSHTTPURLResponse *)response];
+            strongSelf.downloadContentInfo = [[TTDownloadContentInfo alloc] initWithResponse:(NSHTTPURLResponse *)response];
             [strongSelf createSegments];
         }
         else
@@ -100,9 +74,9 @@ const NSInteger kDefaultSegmentBytes = 1024 * 10; //100 K
 {
     NSUInteger segmentBytesSize = self.segmentBytesSize;
     
-    if (!self.contentInformation.byteRangeAccessSupported)
+    if (!self.downloadContentInfo.byteRangeAccessSupported)
     {
-        segmentBytesSize = self.contentInformation.contentLength;
+        segmentBytesSize = self.downloadContentInfo.contentLength;
     }
     
     if (segmentBytesSize == 0)
@@ -110,8 +84,8 @@ const NSInteger kDefaultSegmentBytes = 1024 * 10; //100 K
         segmentBytesSize = kDefaultSegmentBytes;
     }
     
-    unsigned long long mod = self.contentInformation.contentLength % segmentBytesSize;
-    unsigned long long count = self.contentInformation.contentLength / segmentBytesSize;
+    unsigned long long mod = self.downloadContentInfo.contentLength % segmentBytesSize;
+    unsigned long long count = self.downloadContentInfo.contentLength / segmentBytesSize;
     unsigned long long currentOffset = 0;
     
     NSLog(@"createSegments%llu", count);
@@ -154,10 +128,10 @@ const NSInteger kDefaultSegmentBytes = 1024 * 10; //100 K
     long insertIndex = 0;
     BOOL findIndex = NO;
     NSInteger i = 0;
-    for (; i < [self.contentInformation.validDataRangeArray count]; i++)
+    for (; i < [self.validDataRangeArray count]; i++)
     {
 
-        NSValue *value = [self.contentInformation.validDataRangeArray objectAtIndex:i];
+        NSValue *value = [self.validDataRangeArray objectAtIndex:i];
         NSRange range = [value rangeValue];
         
         if (segment.offset < range.location)
@@ -173,9 +147,9 @@ const NSInteger kDefaultSegmentBytes = 1024 * 10; //100 K
         insertIndex = i;
     }
     
-    [self.contentInformation.validDataRangeArray insertObject:[NSValue valueWithRange:range] atIndex:insertIndex];
+    [self.validDataRangeArray insertObject:[NSValue valueWithRange:range] atIndex:insertIndex];
     
-    NSLog(@"didSegmentFinished:%lu", (unsigned long)[self.contentInformation.validDataRangeArray count]);
+    NSLog(@"didSegmentFinished:%lu", (unsigned long)[self.validDataRangeArray count]);
     NSLog(@"didSegmentFinished offset:%llu, length:%llu, destOffset:%llu", segment.offset, segment.length, segment.offset + segment.length);
     
     [self.delegate didRLDownloadTaskDataRefresh:self];
@@ -191,10 +165,10 @@ const NSInteger kDefaultSegmentBytes = 1024 * 10; //100 K
     NSMutableArray *validSegments = [NSMutableArray array];
     
     BOOL hasData = NO;
-    for (NSInteger i = 0; i < [self.contentInformation.validDataRangeArray count]; i++)
+    for (NSInteger i = 0; i < [self.validDataRangeArray count]; i++)
     {
         
-        NSValue *value = [self.contentInformation.validDataRangeArray objectAtIndex:i];
+        NSValue *value = [self.validDataRangeArray objectAtIndex:i];
         NSRange range = [value rangeValue];
         
         NSString *key = [NSString stringWithFormat:@"%lu", (unsigned long)range.location];
